@@ -1,2 +1,2 @@
-Ce projet est utilisé pour la formation devops0121
+# Création d'un application rest api de test pour la formation devpops.
 
