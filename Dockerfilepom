@@ -1,0 +1,57 @@
+# General variable
+ARG INTERMEDIATE_WORKDOSSIER=/home/elhosni/Desktop/devops/intermediate_container_workdir
+ARG FINAL_WORKDOSSIER=/home/elhosni/Desktop/devops/final_container_workdir
+
+# STAGE 1
+# Build de maven
+FROM maven:3.6.3-jdk-8 AS mavenbuild
+
+# Workdir variable d'environnement
+ARG INTERMEDIATE_WORKDOSSIER
+
+# Créer le dossier s'il n'existe pas 
+RUN mkdir -p ${INTERMEDIATE_WORKDOSSIER}
+
+# Copier le source de code dans le répertoire
+COPY src ${INTERMEDIATE_WORKDOSSIER}
+
+# Copier les dépendances 
+COPY pom.xml ${INTERMEDIATE_WORKDOSSIER}
+
+WORKDIR ${INTERMEDIATE_WORKDOSSIER}
+
+# Construire le JAR 
+RUN mvn package spring-boot:repackage
+
+
+# STAGE 2
+# Construire l'image de base 
+FROM openjdk:8-jdk-alpine
+
+# Restating the variable
+ARG INTERMEDIATE_WORKDOSSIER
+
+# Restating the variable
+ARG FINAL_WORKDOSSIER
+
+# Créer le dossier s'il n'existe pas 
+RUN mkdir -p ${FINAL_WORKDOSSIER}
+
+WORKDIR ${FINAL_WORKDOSSIER}
+
+# Prendre le jar construit et le mettre dans un dossier de travail de docker
+# COPY ${INTERMEDIATE_WORKDOSSIER}/target/devops-0.0.1-SNAPSHOT.jar ${FINAL_WORKDOSSIER}/springboot-restapi.jar
+
+# Le jar de l application
+ARG JAR_FILE=target/*.jar
+
+#Deplacer le jar dans le container ici le container et le workspace de l'application 
+ADD ${JAR_FILE} springboot-restapi.jar
+
+RUN pwd
+
+RUN ls
+
+EXPOSE 8080
+
+CMD ["java", "-jar", "springboot-restapi.jar"]
