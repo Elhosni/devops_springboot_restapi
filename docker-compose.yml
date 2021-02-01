@@ -1,0 +1,9 @@
+version: '3.0' # specify docker-compose version
+
+# Define the services/containers to be run
+services:
+  devops:
+    #container_name: devops
+    build: .
+    ports:
+      - 8090:8080
