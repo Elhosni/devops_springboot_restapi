@@ -17,3 +17,8 @@ docker build -t springboot-restapi-imagemaven:0.1 . -f Dockerfilepom
 docker run -p 8090:8080 springboot-restapi-imagemaven:0.1
 ### Tester l'application en récupérant le seule utilisateur crée mootez elhosni
 http://localhost:8090/api/users
+
+
+### 3) pour faire l push de ces images dans github il faut exécuter ces commandes ci-dessou
+docker tag local-image:tagname new-repo:tagname
+docker push new-repo:tagname
